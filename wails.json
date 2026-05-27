@@ -1,0 +1,15 @@
+{
+  "name": "NotesApp",
+  "type": "desktop",
+  "outputfilename": "NotesApp",
+  "frontend": {
+    "dir": "frontend",
+    "install": "",
+    "build": "",
+    "dev": ""
+  },
+  "author": {
+    "name": "",
+    "email": ""
+  }
+}
