@@ -1,0 +1,384 @@
+@font-face {
+	font-family: 'Mojangles';
+	src: url('res/fonts/mojangles-monospaced.otf.woff2/mojangles-monospaced.otf.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	touch-action: pan-x pan-y;
+}
+
+html {
+	font-size: 12px;
+   
+	touch-action: manipulation;
+}
+
+body {
+	font-family: 'Mojangles', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+	font-weight: bold;
+     color:black;
+	background: linear-gradient( rgb(211, 210, 210) 0%, gray 50%, rgb(58, 58, 58) 100%);
+	min-height: 100vh;
+	padding: 0;
+	margin: 0;
+	touch-action: manipulation;
+}
+
+.container {
+	width: 100%;
+	height: 100vh;
+	/* background: url('res/pngs/dark_splater.png') center; */
+	border-radius: 0;
+	box-shadow: none;
+	padding: .5rem;
+	display: flex;
+	flex-direction: column;
+}
+
+h1 {
+	
+	font-size: 1.75rem;
+	flex: 1;
+	text-align: center;
+}
+
+.btn {
+	padding: 0.75rem 1.25rem;
+	border: none;
+	font-size: 0.875rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s;
+	white-space: nowrap;
+}
+
+.btn-add:hover {
+	background: #5568d3;
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-add-fixed {
+	position: fixed;
+	left: .5rem;
+	bottom: .5rem;
+	width: 3.125rem;
+	height: 3.125rem;
+	padding: 0;
+	background: url('res/add_background.svg') center / contain no-repeat;
+	border: none;
+	border-radius: 0;
+	font-size: 1.5rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s;
+	box-shadow: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.btn-add-fixed img.icon {
+	width: 2.5rem;
+	padding: .25rem;
+	filter: brightness(0);
+	transition: filter 0.3s;
+}
+
+.btn-add-fixed:hover img.icon {
+	filter: brightness(0) invert(1);
+}
+
+.notes-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	flex: 1;
+	overflow-y: auto;
+	padding-right: 0.625rem;
+}
+
+.note-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75rem;
+	transition: all 0.3s;
+}
+
+.note-item:hover {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.note-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	padding: 0px;
+}
+
+.textarea-border {
+	position: relative;
+	display: block;
+	width: 100%;
+    padding:0px;
+}
+
+.textarea-border .note-text-editable {
+	position: relative;
+	margin: 0;
+	width: 100%;
+	border: none;
+	padding-top: 0.75rem;
+    padding-left: 0.75rem;
+	display: block;
+	z-index: 5;
+	box-sizing: border-box;
+    max-height: 2.75rem;
+    color:black;
+    background-color: white;
+}
+
+.textarea-border .note-text-editable:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+.textarea-border .corner {
+	position: absolute;
+	width: 0.75rem;
+	height: 0.75rem;
+	pointer-events: none;
+	z-index: 10;
+	user-select: none;
+}
+
+.textarea-border .corner-tl {
+	top: 0;
+	left: 0;
+}
+
+.textarea-border .corner-tr {
+    rotate: 90deg;
+	top: 0;
+	right: 0;
+}
+
+.textarea-border .corner-bl {
+    rotate: 270deg;
+	bottom: 0;
+	left: 0;
+}
+
+.textarea-border .corner-br {
+    rotate: 180deg;
+	bottom: 0;
+	right: 0;
+}
+
+.textarea-border .side {
+	position: absolute;
+	pointer-events: none;
+	z-index: 9;
+	display: block;
+	object-fit: fill;
+	user-select: none;
+}
+
+.textarea-border .side-top {
+	top: 0;
+	left: 0.75rem;
+	right: 0.75rem;
+	width: calc(100% - 1.5rem);
+    max-height:.75rem;
+}
+
+.textarea-border .side-bottom {
+	bottom: 0;
+	left: 0.75rem;
+	right: 0.75rem;
+	width: calc(100% - 1.5rem);
+    max-height:.75rem;
+}
+
+.textarea-border .side-left {
+	left: 0;
+	top: 0.75rem;
+	bottom: 0.75rem;
+	height: calc(100% - 1.5rem);
+    max-width:.75rem;
+}
+
+.textarea-border .side-right {
+	right: 0;
+	top: 0.75rem;
+	bottom: 0.75rem;
+	height: calc(100% - 1.5rem);
+    max-width:.75rem;
+}
+
+.note-text-view {
+	color: #333;
+	font-size: 0.9375rem;
+	word-break: break-word;
+	cursor: pointer;
+	padding: 0.25rem;
+	border-radius: 0.25rem;
+	transition: background 0.2s;
+	min-height: 1.25rem;
+	line-height: 1.4;
+}
+
+.note-text-view:hover {
+	background: #f0f0ff;
+}
+
+.note-text-editable {
+	background: transparent;
+	color: #333;
+	font-size: 0.9375rem;
+	font-family: inherit;
+	resize: none;
+	min-height: 1.25rem;
+	line-height: 1.4;
+	border: none;
+    padding:0px;
+}
+
+.note-text-editable:focus {
+	outline: none;
+	border-color: #5568d3;
+	box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.note-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 0.125rem;
+}
+
+.note-meta small {
+	color: #999;
+	font-size: 0.75rem;
+}
+
+.note-actions {
+	display: flex;
+	gap: 0.5rem;
+	flex-shrink: 0;
+    min-height: 2.5rem;
+    width: auto;
+}
+
+.btn-remove {
+	background: url('res/delete_background.svg') center / contain no-repeat;
+	padding: 0px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.btn-remove:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.btn-lock {
+	padding: 0px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	cursor: pointer;
+}
+
+.btn-copy {
+	background: url('res/copy_background.svg') center / contain no-repeat;
+	padding: 0px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.btn-lock {
+    background: url('res/unlocked_background.svg') center / contain no-repeat;
+	padding: 0px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.btn-lock.locked {
+    background: url('res/locked_background.svg') center / contain no-repeat;
+}
+
+.icon {
+    user-select: none;
+}
+
+.btn-copy img.icon {
+	width:2.5rem;
+    padding:.25rem;
+	filter: brightness(0);
+	transition: filter 0.3s;
+}
+
+.btn-copy:hover img.icon {
+	filter: brightness(0) invert(1);
+}
+
+.btn-remove img.icon {
+	width:2.75rem;
+}
+
+.btn-lock img.icon {
+	width:2.5rem;
+	padding:.25rem;
+	filter: brightness(0);
+	transition: filter 0.3s;
+}
+
+.btn-lock:hover img.icon {
+	filter: brightness(0) invert(1);
+}
+
+.empty-state {
+	text-align: center;
+	padding: 2.5rem 1.25rem;
+	color: #999;
+}
+
+.empty-state p {
+	font-size: 1rem;
+}
+
+/* Scrollbar styling */
+.notes-list::-webkit-scrollbar {
+	width: 0.5rem;
+}
+
+.notes-list::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.notes-list::-webkit-scrollbar-thumb {
+	background: #ccc;
+	border-radius: 0.25rem;
+}
+
+.notes-list::-webkit-scrollbar-thumb:hover {
+	background: #999;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 576px) {
+	html {
+        font-size: 8px;
+    }
+}
