@@ -6,6 +6,7 @@ import (
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
+	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
 
 //go:embed all:frontend/dist
@@ -15,9 +16,11 @@ func main() {
 	app := NewApp()
 
 	err := wails.Run(&options.App{
-		Title:  "Arival Prep Notes",
-		Width:  800,
-		Height: 600,
+		Title:     "Arival Prep Notes",
+		Width:     600,
+		Height:    600,
+		MinWidth:  300,
+		MinHeight: 210,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
@@ -26,6 +29,11 @@ func main() {
 		OnShutdown:       app.shutdown,
 		Bind: []interface{}{
 			app,
+		},
+		Windows: &windows.Options{
+			WebviewIsTransparent: false,
+			WindowIsTranslucent:  false,
+			DisableWindowIcon:    false,
 		},
 	})
 

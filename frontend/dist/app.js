@@ -1,6 +1,7 @@
+console.log('app.js loaded');
+
 const addBtn = document.getElementById('addBtn');
 const notesList = document.getElementById('notesList');
-const lockedNotes = new Set();
 
 // Prevent zoom
 document.addEventListener('keydown', (e) => {
@@ -15,7 +16,26 @@ document.addEventListener('wheel', (e) => {
 	}
 }, { passive: false });
 
+// Debounce resize events
+let resizeTimeout;
+window.addEventListener('resize', () => {
+	clearTimeout(resizeTimeout);
+	resizeTimeout = setTimeout(() => {
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+		console.log('Window resized to', width, 'x', height);
+		if (window.go && window.go.main && window.go.main.App && window.go.main.App.OnWindowResized) {
+			window.go.main.App.OnWindowResized(width, height)
+				.then(() => console.log('Resolution saved'))
+				.catch(err => console.error('Error saving resolution:', err));
+		} else {
+			console.log('window.go.main.App.OnWindowResized not yet available');
+		}
+	}, 500);
+});
+
 window.addEventListener('wails:ready', async () => {
+	console.log('Wails ready');
 	await loadNotes();
 });
 
@@ -45,7 +65,7 @@ function formatDate(dateString) {
 function renderNotes(notes) {
 	notesList.innerHTML = notes.map((note) => {
 		const updatedAt = formatDate(note.updatedAt);
-		const isLocked = lockedNotes.has(note.id);
+		const isLocked = note.isLocked;
 
 		return `
 			<div class="note-item" data-note-id="${note.id}">
@@ -54,14 +74,9 @@ function renderNotes(notes) {
 				</div>
 				<div class="note-content">
 					<div class="textarea-border">
-						<img src="res/corner.svg" class="corner corner-tl" alt=""/>
-						<img src="res/corner.svg" class="corner corner-tr" alt=""/>
-						<img src="res/corner.svg" class="corner corner-bl" alt=""/>
-						<img src="res/corner.svg" class="corner corner-br" alt=""/>
-						<img src="res/side-top.svg" class="side side-top" alt=""/>
-						<img src="res/side-bottom.svg" class="side side-bottom" alt=""/>
-						<img src="res/side-left.svg" class="side side-left" alt=""/>
-						<img src="res/side-right.svg" class="side side-right" alt=""/>
+						<img src="res/svgs/left_text.svg" class="side side-left" alt=""/>
+						<img src="res/svgs/middle_text.svg" class="side side-middle" alt=""/>
+						<img src="res/svgs/right_text.svg" class="side side-right" alt=""/>
 						<textarea class="note-text-editable" data-note-id="${note.id}" data-original-text="${escapeHtml(note.text)}">${note.text}</textarea>
 					</div>
 				</div>
@@ -153,15 +168,12 @@ function renderNotes(notes) {
 	document.querySelectorAll('.btn-lock').forEach(btn => {
 		btn.addEventListener('click', async (e) => {
 			const noteId = parseInt(btn.dataset.noteId);
-			const notes = await window.go.main.App.GetNotes();
-
-			if (lockedNotes.has(noteId)) {
-				lockedNotes.delete(noteId);
-			} else {
-				lockedNotes.add(noteId);
+			try {
+				await window.go.main.App.ToggleLock(noteId);
+				await loadNotes();
+			} catch (err) {
+				console.error('Failed to toggle lock:', err);
 			}
-
-			renderNotes(notes);
 		});
 	});
 }

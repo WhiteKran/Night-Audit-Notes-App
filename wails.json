@@ -5,11 +5,11 @@
   "frontend": {
     "dir": "frontend",
     "install": "",
-    "build": "",
-    "dev": ""
+    "build": "1.0.2",
+    "dev": "Daniel Werner"
   },
   "author": {
-    "name": "",
+    "name": "Daniel Werner",
     "email": ""
   }
 }
