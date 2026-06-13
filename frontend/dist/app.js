@@ -70,7 +70,7 @@ async function resizeWindowToContent() {
 		if (window.go && window.go.main && window.go.main.App && window.go.main.App.SetAppResolution) {
 			try {
 				const remSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-				await window.go.main.App.SetAppResolution({ width: bodyWidth, height: bodyHeight + 1 * remSize });
+				await window.go.main.App.SetAppResolution({ width: bodyWidth, height: bodyHeight });
 			} catch (err) {
 				console.error('Error resizing window:', err);
 			}
