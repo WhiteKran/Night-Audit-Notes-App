@@ -81,7 +81,10 @@ func (a *App) initDB() {
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);
 	`
-	a.db.Exec(resolutionQuery)
+	_, err = a.db.Exec(resolutionQuery)
+	if err != nil {
+		fmt.Printf("Error creating resolution table: %v\n", err)
+	}
 
 	// Add is_locked column if it doesn't exist (for existing databases)
 	a.db.Exec("ALTER TABLE notes ADD COLUMN is_locked BOOLEAN DEFAULT 0")

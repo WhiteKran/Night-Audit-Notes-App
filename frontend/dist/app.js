@@ -3,7 +3,11 @@ console.log('app.js loaded');
 const addBtn = document.getElementById('addBtn');
 const notesList = document.getElementById('notesList');
 
-// Prevent zoom
+// Titlebar window controls
+document.getElementById('btn-min').addEventListener('click', () => window.runtime.WindowMinimise());
+document.getElementById('btn-max').addEventListener('click', () => window.runtime.WindowToggleMaximise());
+document.getElementById('btn-close').addEventListener('click', () => window.runtime.Quit());
+
 document.addEventListener('keydown', (e) => {
 	if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
 		e.preventDefault();
@@ -16,7 +20,6 @@ document.addEventListener('wheel', (e) => {
 	}
 }, { passive: false });
 
-// Debounce resize events
 let resizeTimeout;
 window.addEventListener('resize', () => {
 	clearTimeout(resizeTimeout);
@@ -36,7 +39,7 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('wails:ready', async () => {
 	console.log('Wails ready');
-	await loadNotes();
+	await loadNotes(true);
 });
 
 addBtn.addEventListener('click', async () => {
@@ -45,16 +48,34 @@ addBtn.addEventListener('click', async () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-	loadNotes();
+	loadNotes(true);
 });
 
-async function loadNotes() {
+async function loadNotes(shouldResize = false) {
 	try {
 		const notes = await window.go.main.App.GetNotes();
 		renderNotes(notes);
+		if (shouldResize) {
+			resizeWindowToContent();
+		}
 	} catch (err) {
 		console.error('Error loading notes:', err);
 	}
+}
+
+async function resizeWindowToContent() {
+	setTimeout(async () => {
+		const bodyHeight = document.body.scrollHeight;
+		const bodyWidth = document.body.scrollWidth;
+		if (window.go && window.go.main && window.go.main.App && window.go.main.App.SetAppResolution) {
+			try {
+				const remSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+				await window.go.main.App.SetAppResolution({ width: bodyWidth, height: bodyHeight + 1 * remSize });
+			} catch (err) {
+				console.error('Error resizing window:', err);
+			}
+		}
+	}, 0);
 }
 
 function formatDate(dateString) {
@@ -88,11 +109,9 @@ function renderNotes(notes) {
 		`;
 	}).join('');
 
-	// Attach event listeners
 	document.querySelectorAll('.note-text-editable').forEach(textarea => {
 		const noteId = parseInt(textarea.dataset.noteId);
 
-		// Auto-save on input
 		textarea.addEventListener('input', async (e) => {
 			const text = textarea.value;
 			try {
@@ -102,13 +121,11 @@ function renderNotes(notes) {
 			}
 		});
 
-		// Auto-resize textarea
 		textarea.addEventListener('input', () => {
 			textarea.style.height = 'auto';
 			textarea.style.height = Math.min(textarea.scrollHeight, 400) + 'px';
 		});
 
-		// Initial resize
 		setTimeout(() => {
 			textarea.style.height = 'auto';
 			textarea.style.height = Math.min(textarea.scrollHeight, 400) + 'px';
@@ -176,6 +193,7 @@ function renderNotes(notes) {
 			}
 		});
 	});
+	
 }
 
 function escapeHtml(text) {

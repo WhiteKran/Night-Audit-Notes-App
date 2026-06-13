@@ -26,11 +26,64 @@ body {
 	padding: 0;
 	margin: 0;
 	touch-action: manipulation;
+	display: flex;
+	flex-direction: column;
+}
+
+#titlebar {
+	--wails-draggable: drag;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: 
+		linear-gradient(rgba(85, 104, 211, 0.75), rgba(85, 104, 211, 0.75)),
+		url('res/pngs/text_background.png') center;
+	background-blend-mode: multiply;
+	color: #cccccc;
+	height: 2.5rem;
+	padding: 0 0.5rem;
+	flex-shrink: 0;
+	user-select: none;
+}
+
+#titlebar-title {
+	font-size: 0.75rem;
+	letter-spacing: 0.05em;
+	font-family: 'Mojangles', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+#titlebar-buttons {
+	--wails-draggable: no-drag;
+	display: flex;
+	gap: 0;
+}
+
+#titlebar-buttons button {
+	background: none;
+	border: none;
+	color: black;
+	width: 2.5rem;
+	height: 2rem;
+	font-size: 1.25rem;
+	font-weight:900;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.15s;
+}
+
+#titlebar-buttons button:hover {
+	color:white;
+}
+
+#btn-close:hover {
+	color: #e53935 !important;
 }
 
 .container {
 	width: 100%;
-	height: 100vh;
+	flex: 1;
 	background: url('res/pngs/dark_splater.png') center;
 	border-radius: 0;
 	box-shadow: none;
@@ -40,6 +93,7 @@ body {
 	padding-right: 0px;
 	padding-bottom: 0px;
 	border: 10px double #5568d3;
+	position: relative;
 }
 
 h1 {
@@ -66,13 +120,11 @@ h1 {
 }
 
 .btn-add-fixed {
-	position: fixed;
-	left: 1.75rem;
-	bottom: 1.75rem;
 	width: 2.75rem;
 	height: 2.75rem;
 	padding: 0;
-	background: url('res/add_background.svg') center / contain no-repeat;
+	background: none;
+	z-index: 10;
 }
 
 .btn-add-fixed img.icon {

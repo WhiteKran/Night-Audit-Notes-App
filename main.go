@@ -18,9 +18,10 @@ func main() {
 	err := wails.Run(&options.App{
 		Title:     "Arival Prep Notes",
 		Width:     600,
-		Height:    600,
+		Height:    632,
+		Frameless: true,
 		MinWidth:  300,
-		MinHeight: 210,
+		MinHeight: 242,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
